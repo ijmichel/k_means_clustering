@@ -2,6 +2,7 @@
 
 import re
 import os
+import numpy as np
 
 def kmeans(inputPath,K) :
 
@@ -11,9 +12,11 @@ def kmeans(inputPath,K) :
          for line in f:
             line = line.rstrip()
             data = re.split(',', line)
+            print ("data -->",data)
             transactions.append(data)
     
     numPoints = len(transactions)
     
+
                     
 kmeans("places.txt",3);
