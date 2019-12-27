@@ -30,22 +30,29 @@ def kmeans(inputPath,K) :
         print ("Ponit X--> ", n, " : ", currentCentroids[n])
         
     pointCentroidIndex = {}
+    
+    calculateClosestCentroid(x,pointCentroidIndex,currentCentroids)
 
-    for i,aPoint in enumerate(x):
-        print ("aPoint", aPoint)
+     
+def calculateClosestCentroid(x,pointCentroidIndex,currentCentroids) :
+     aCentroidChanged = False
+     for i,aPoint in enumerate(x):
+        # print ("aPoint", aPoint)
         leastDist = 99999
         Px = aPoint[0]
         Py = aPoint[1]
         for j,aCentroid in enumerate(currentCentroids):
             Cx = aCentroid[0]
             Cy = aCentroid[1]
-            print (Px , ":",Py,":",Cx,":",Cy)
+            # print (Px , ":",Py,":",Cx,":",Cy)
             currDistance = math.sqrt((float(Px) - float(Cx))**2 + (float(Py) - float(Cy))**2 )
             if currDistance < leastDist:
                 leastDist = currDistance
-                print ("i-->",i)
+                if i in pointCentroidIndex.keys() and pointCentroidIndex[i] is not j:
+                    aCentroidChanged  = True
                 pointCentroidIndex[i] = j
-                print("point ", i, " Centroid --> ", currentCentroids[j])
-                    
+                print("point ", i, " Centroid --> ", currentCentroids[j], "Distance-->",leastDist,"Centroid-->",pointCentroidIndex[i])   
+    
+     return aCentroidChanged
                     
 kmeans("places.txt",3);
