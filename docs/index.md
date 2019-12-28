@@ -7,3 +7,5 @@ Con
 
 Pro
 - Can work anyhwere I have a web browser
+- The debug button was hard to find, but I finally found it here at the bottom pane (image below).  
+[Image of Debug Button](https://ijmichel.github.io/k_means_clustering/debug_button.PNG)
