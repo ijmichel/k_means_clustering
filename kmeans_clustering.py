@@ -30,15 +30,22 @@ def kmeans(inputPath,K) :
         print ("Centroid -> ", n, " : ", currentCentroids[n])
         
     pointCentroidIndex = {}
+ 
+    calculateClosestCentroid(x,pointCentroidIndex,currentCentroids)
     
-    aCentroidChanged = calculateClosestCentroid(x,pointCentroidIndex,currentCentroids)
+    f = open("clusters.txt", "w")
+    for index in pointCentroidIndex:
+        tWrite = str(index) +  " " + str(pointCentroidIndex[index]) + "\n"
+        f.write(tWrite)
+    f.close()
     
-    if aCentroidChanged is True:
-        updateCentroidCoordinates(x,pointCentroidIndex,currentCentroids)
+    print("DONE!")
+    
         
 def updateCentroidCoordinates(x,pointCentroidIndex,currentCentroids) :
     centroidIndexToNewCoords = {}
     for i,aPoint in enumerate(x):
+        # print ("i-->",i)
         if pointCentroidIndex[i] in centroidIndexToNewCoords:
             coordsForNewCentroid = centroidIndexToNewCoords[pointCentroidIndex[i]]
             coordsForNewCentroid.append(aPoint)
@@ -52,11 +59,13 @@ def updateCentroidCoordinates(x,pointCentroidIndex,currentCentroids) :
         coordsForNewCentroid = centroidIndexToNewCoords[aCentIndex]
         data =  np.array(coordsForNewCentroid).astype(np.float)
         averaged = np.average(data, axis=0)
+        currentCentroids[aCentIndex] = averaged
         print ("Averaged--> Key", aCentIndex, "Averaged-->",averaged)
         
             
      
 def calculateClosestCentroid(x,pointCentroidIndex,currentCentroids) :
+     inProgressPointCentroidIndex = {}
      aCentroidChanged = False
      for i,aPoint in enumerate(x):
         # print ("aPoint", aPoint)
@@ -70,15 +79,20 @@ def calculateClosestCentroid(x,pointCentroidIndex,currentCentroids) :
             currDistance = math.sqrt((float(Px) - float(Cx))**2 + (float(Py) - float(Cy))**2 )
             if currDistance < leastDist:
                 leastDist = currDistance
-                if i in pointCentroidIndex.keys() : #we have one already but it changed
-                    if pointCentroidIndex[i] is not j :
-                        aCentroidChanged  = True
-                else:
-                    aCentroidChanged = True #we don't have one already
-                
-                pointCentroidIndex[i] = j
+                inProgressPointCentroidIndex[i] = j
                 # print("point ", i, " Centroid --> ", currentCentroids[j], "Distance-->",leastDist,"Centroid-->",pointCentroidIndex[i])   
-    
-     return aCentroidChanged
+
+     for c1 in inProgressPointCentroidIndex.keys() :
+         if c1 in pointCentroidIndex:
+             if inProgressPointCentroidIndex[c1] is not pointCentroidIndex[c1]:
+                aCentroidChanged = True
+         else:
+             aCentroidChanged = True
+             
+         pointCentroidIndex[c1] = inProgressPointCentroidIndex[c1]
+     
+     if aCentroidChanged is True:
+        updateCentroidCoordinates(x,pointCentroidIndex,currentCentroids)
+        calculateClosestCentroid(x,pointCentroidIndex,currentCentroids)
                     
 kmeans("places.txt",3);
