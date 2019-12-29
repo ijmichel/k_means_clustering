@@ -25,14 +25,36 @@ def kmeans(inputPath,K) :
     
     currentCentroids = []
     for n in range(K):
-        print ("X --> ",n)
+        # print ("X --> ",n)
         currentCentroids.append(transactions[indices[n]])
-        print ("Ponit X--> ", n, " : ", currentCentroids[n])
+        print ("Centroid -> ", n, " : ", currentCentroids[n])
         
     pointCentroidIndex = {}
     
-    calculateClosestCentroid(x,pointCentroidIndex,currentCentroids)
-
+    aCentroidChanged = calculateClosestCentroid(x,pointCentroidIndex,currentCentroids)
+    
+    if aCentroidChanged is True:
+        updateCentroidCoordinates(x,pointCentroidIndex,currentCentroids)
+        
+def updateCentroidCoordinates(x,pointCentroidIndex,currentCentroids) :
+    centroidIndexToNewCoords = {}
+    for i,aPoint in enumerate(x):
+        if pointCentroidIndex[i] in centroidIndexToNewCoords:
+            coordsForNewCentroid = centroidIndexToNewCoords[pointCentroidIndex[i]]
+            coordsForNewCentroid.append(aPoint)
+            centroidIndexToNewCoords[pointCentroidIndex[i]] = coordsForNewCentroid
+        else:
+            coordsForNewCentroid = []
+            coordsForNewCentroid.append(aPoint)
+            centroidIndexToNewCoords[pointCentroidIndex[i]] = coordsForNewCentroid
+            
+    for aCentIndex in centroidIndexToNewCoords.keys():
+        coordsForNewCentroid = centroidIndexToNewCoords[aCentIndex]
+        data =  np.array(coordsForNewCentroid).astype(np.float)
+        averaged = np.average(data, axis=0)
+        print ("Averaged--> Key", aCentIndex, "Averaged-->",averaged)
+        
+            
      
 def calculateClosestCentroid(x,pointCentroidIndex,currentCentroids) :
      aCentroidChanged = False
@@ -48,10 +70,14 @@ def calculateClosestCentroid(x,pointCentroidIndex,currentCentroids) :
             currDistance = math.sqrt((float(Px) - float(Cx))**2 + (float(Py) - float(Cy))**2 )
             if currDistance < leastDist:
                 leastDist = currDistance
-                if i in pointCentroidIndex.keys() and pointCentroidIndex[i] is not j:
-                    aCentroidChanged  = True
+                if i in pointCentroidIndex.keys() : #we have one already but it changed
+                    if pointCentroidIndex[i] is not j :
+                        aCentroidChanged  = True
+                else:
+                    aCentroidChanged = True #we don't have one already
+                
                 pointCentroidIndex[i] = j
-                print("point ", i, " Centroid --> ", currentCentroids[j], "Distance-->",leastDist,"Centroid-->",pointCentroidIndex[i])   
+                # print("point ", i, " Centroid --> ", currentCentroids[j], "Distance-->",leastDist,"Centroid-->",pointCentroidIndex[i])   
     
      return aCentroidChanged
                     
