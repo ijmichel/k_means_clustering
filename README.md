@@ -21,4 +21,4 @@ L2 =  sqrt(x1 − xcentroidx1 ^)2 + (x2 − xcentroidx2 )^2
 - NOTE: See the console for the coordinates of each of the K centroids after iterations are complete.  They are not ouput into the file.
 
 # NOTES
-- I used cloud9 on AWS to do the coding and wrote a small blog about it.  https://ijmichel.github.io/k_means_clustering/
+- I used cloud9 (https://console.aws.amazon.com/cloud9/) on AWS to do the coding instead of a local IDE just to try it out, and then also tried out GitHub pages which I've never used before here to document by cloud9 experience:   https://ijmichel.github.io/k_means_clustering/
